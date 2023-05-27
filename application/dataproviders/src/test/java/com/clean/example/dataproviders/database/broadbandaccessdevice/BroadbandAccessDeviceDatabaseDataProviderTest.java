@@ -2,7 +2,7 @@ package com.clean.example.dataproviders.database.broadbandaccessdevice;
 
 import com.clean.example.core.entity.BroadbandAccessDevice;
 import com.clean.example.core.entity.DeviceType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -16,8 +16,7 @@ import static com.clean.example.core.entity.DeviceType.ADSL;
 import static com.clean.example.core.entity.DeviceType.FIBRE;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 public class BroadbandAccessDeviceDatabaseDataProviderTest {
@@ -27,7 +26,7 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     BroadbandAccessDeviceDatabaseDataProvider broadbandAccessDeviceDatabaseDataProvider = new BroadbandAccessDeviceDatabaseDataProvider(jdbcTemplate);
 
     @Test
-    public void returnsEmptyListWhenThereAreNoDevices() throws Exception {
+    public void returnsEmptyListWhenThereAreNoDevices() {
         givenThereAreNoDevices();
 
         List<String> allDeviceHostnames = broadbandAccessDeviceDatabaseDataProvider.getAllDeviceHostnames();
@@ -36,8 +35,8 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     }
 
     @Test
-    public void returnsTheHostnameOfAllDevices() throws Exception {
-        thereThereAreDevices("hostname1", "hostname2", "hostname3");
+    public void returnsTheHostnameOfAllDevices() {
+        givenThereAreDevices("hostname1", "hostname2", "hostname3");
 
         List<String> allDeviceHostnames = broadbandAccessDeviceDatabaseDataProvider.getAllDeviceHostnames();
 
@@ -45,7 +44,7 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     }
 
     @Test
-    public void returnsNullSerialNumberForADeviceThatDoesNotExist() throws Exception {
+    public void returnsNullSerialNumberForADeviceThatDoesNotExist() {
         givenDeviceDoesNotExist("hostname1");
 
         String serialNumber = broadbandAccessDeviceDatabaseDataProvider.getSerialNumber("hostname1");
@@ -54,7 +53,7 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     }
 
     @Test
-    public void returnsSerialNumberOfADevice() throws Exception {
+    public void returnsSerialNumberOfADevice() {
         givenDeviceHasSerialNumber("hostname1", "serialNumber1");
 
         String serialNumber = broadbandAccessDeviceDatabaseDataProvider.getSerialNumber("hostname1");
@@ -63,15 +62,16 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     }
 
     @Test
-    public void updatesTheSerialNumberOfADevice() throws Exception {
+    public void updatesTheSerialNumberOfADevice() {
         broadbandAccessDeviceDatabaseDataProvider.updateSerialNumber("hostname1", "newSerialNumber");
 
         verify(jdbcTemplate).update(anyString(), eq("newSerialNumber"), eq("hostname1"));
     }
 
     @Test
-    public void returnsTheDetailsOfADevice() throws Exception {
-        givenThereIsADevice("exchangeCode", "exchangeName", "exchangePostcode", "hostname", "serialNumber", ADSL, 123);
+    public void returnsTheDetailsOfADevice() {
+        Map<String, Object> device1 = detailsForDevice("exchangeCode", "exchangeName", "exchangePostcode", "hostname", "serialNumber", ADSL, 123);
+        givenThereIsADevice(device1);
 
         BroadbandAccessDevice device = broadbandAccessDeviceDatabaseDataProvider.getDetails("hostname");
 
@@ -85,8 +85,8 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     }
 
     @Test
-    public void returnsNullWhenTheDeviceIsNotFound() throws Exception {
-        givenThereIsntADevice();
+    public void returnsNullWhenTheDeviceIsNotFound() {
+        givenThereIsNoDevice();
 
         BroadbandAccessDevice device = broadbandAccessDeviceDatabaseDataProvider.getDetails("hostname");
 
@@ -94,7 +94,7 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
     }
 
     @Test
-    public void returnsAvailablePortsOfAllDevicesInAnExchange() throws Exception {
+    public void returnsAvailablePortsOfAllDevicesInAnExchange() {
         Map<String, Object> device1 = detailsForDevice("exchangeCode", "exchangeName", "exchangePostcode1", "hostname1", "serialNumber1", ADSL, 2);
         Map<String, Object> device2 = detailsForDevice("exchangeCode", "exchangeName", "exchangePostcode2", "hostname2", "serialNumber2", FIBRE, 4);
         when(jdbcTemplate.queryForList(anyString(), eq("exchangeCode"))).thenReturn(asList(device1, device2));
@@ -118,9 +118,8 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
         when(jdbcTemplate.queryForObject(anyString(), eq(String.class), eq(hostname))).thenReturn(serialNumber);
     }
 
-    private void givenThereIsADevice(String exchangeCode, String exchangeName, String exchangePostcode, String hostname, String serialNumber, DeviceType type, int availablePorts) {
-        Map<String, Object> details = detailsForDevice(exchangeCode, exchangeName, exchangePostcode, hostname, serialNumber, type, availablePorts);
-        when(jdbcTemplate.queryForMap(anyString(), anyVararg())).thenReturn(details);
+    private void givenThereIsADevice(Map<String, Object> device ) {
+        when(jdbcTemplate.queryForMap(anyString(), eq("hostname"))).thenReturn(device);
     }
 
     private Map<String, Object> detailsForDevice(String exchangeCode, String exchangeName, String exchangePostcode, String hostname, String serialNumber, DeviceType type, int availablePorts) {
@@ -135,11 +134,11 @@ public class BroadbandAccessDeviceDatabaseDataProviderTest {
         return details;
     }
 
-    private void givenThereIsntADevice() {
-        when(jdbcTemplate.queryForMap(anyString(), anyVararg())).thenThrow(new IncorrectResultSizeDataAccessException(1));
+    private void givenThereIsNoDevice() {
+        when(jdbcTemplate.queryForMap(anyString(), anyCollection())).thenThrow(new IncorrectResultSizeDataAccessException(1));
     }
 
-    private void thereThereAreDevices(String... hostnames) {
+    private void givenThereAreDevices(String... hostnames) {
         when(jdbcTemplate.queryForList(anyString(), eq(String.class))).thenReturn(asList(hostnames));
     }
 

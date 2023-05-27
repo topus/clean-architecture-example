@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.stringutils)
+    implementation(libs.bundles.stringUtils)
 
-    testImplementation(libs.bundles.unittests)
+    testImplementation(libs.bundles.unitTests)
 }

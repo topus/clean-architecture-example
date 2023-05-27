@@ -1,24 +1,24 @@
 package com.clean.example.dataproviders.database.exchange;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ExchangeDatabaseDataProviderTest {
 
-    private static final String EXCHANGE_CODE = "exch1";
+    private static final String EXCHANGE_CODE = "exchange1";
 
-    JdbcTemplate jdbcTemplace = mock(JdbcTemplate.class);
+    JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
 
-    ExchangeDatabaseDataProvider exchangeDatabaseDataProvider = new ExchangeDatabaseDataProvider(jdbcTemplace);
+    ExchangeDatabaseDataProvider exchangeDatabaseDataProvider = new ExchangeDatabaseDataProvider(jdbcTemplate);
 
     @Test
-    public void falseWhenExchangeDoesNotExist() throws Exception {
+    public void falseWhenExchangeDoesNotExist() {
         givenExchangeDoesNotExist();
 
         boolean doesExchangeExist = exchangeDatabaseDataProvider.doesExchangeExist(EXCHANGE_CODE);
@@ -27,7 +27,7 @@ public class ExchangeDatabaseDataProviderTest {
     }
 
     @Test
-    public void trueWhenExchangeDoesNotExist() throws Exception {
+    public void trueWhenExchangeDoesNotExist() {
         givenExchangeExists();
 
         boolean doesExchangeExist = exchangeDatabaseDataProvider.doesExchangeExist(EXCHANGE_CODE);
@@ -36,11 +36,11 @@ public class ExchangeDatabaseDataProviderTest {
     }
 
     private void givenExchangeExists() {
-        when(jdbcTemplace.queryForObject(anyString(), eq(Integer.class), eq(EXCHANGE_CODE))).thenReturn(1);
+        when(jdbcTemplate.queryForObject(anyString(), eq(Integer.class), eq(EXCHANGE_CODE))).thenReturn(1);
     }
 
     private void givenExchangeDoesNotExist() {
-        when(jdbcTemplace.queryForObject(anyString(), eq(Integer.class), eq(EXCHANGE_CODE))).thenReturn(0);
+        when(jdbcTemplate.queryForObject(anyString(), eq(Integer.class), eq(EXCHANGE_CODE))).thenReturn(0);
     }
 
 }

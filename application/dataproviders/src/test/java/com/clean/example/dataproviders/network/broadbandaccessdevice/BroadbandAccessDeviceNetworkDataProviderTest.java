@@ -2,7 +2,7 @@ package com.clean.example.dataproviders.network.broadbandaccessdevice;
 
 import com.clean.example.dataproviders.network.deviceclient.DeviceClient;
 import com.clean.example.dataproviders.network.deviceclient.DeviceConnectionTimeoutException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.mock;
@@ -15,7 +15,7 @@ public class BroadbandAccessDeviceNetworkDataProviderTest {
     BroadbandAccessDeviceNetworkDataProvider broadbandAccessDeviceNetworkDataProvider = new BroadbandAccessDeviceNetworkDataProvider(deviceClient);
 
     @Test
-    public void findsTheSerialNumberOfADevice() throws Exception {
+    public void findsTheSerialNumberOfADevice() {
         givenADeviceWithHostnameAndSerialNumber("hostname1", "serialNumber1");
 
         String serialNumber = broadbandAccessDeviceNetworkDataProvider.getSerialNumber("hostname1");
@@ -24,7 +24,7 @@ public class BroadbandAccessDeviceNetworkDataProviderTest {
     }
 
     @Test
-    public void returnsNullWhenDeviceIsNotResponding() throws Exception {
+    public void returnsNullWhenDeviceIsNotResponding() {
         givenADeviceIsNotResponding("hostname1");
 
         String serialNumber = broadbandAccessDeviceNetworkDataProvider.getSerialNumber("hostname1");

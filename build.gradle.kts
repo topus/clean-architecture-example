@@ -5,9 +5,6 @@ version = "1.0-SNAPSHOT"
 
 subprojects {
 
-    val springVersion by extra("4.2.5.RELEASE")
-    val springbootVersion by extra("1.3.3.RELEASE")
-
     /*
     ext {
         spring_version = "4.2.5.RELEASE"

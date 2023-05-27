@@ -72,27 +72,36 @@ public class BroadbandAccessDeviceDatabaseDataProvider implements GetAllDeviceHo
     }
 
     private BroadbandAccessDevice doGetDetails(String hostname) {
-        Map<String, Object> result = jdbcTemplate.queryForMap(
-                "SELECT e.code as ex_code, e.name as ex_name, e.postcode as ex_postcode, " +
-                "       d.hostname, d.serial_number, dt.name as type, d.available_ports " +
-                "FROM clean_architecture.bb_access_device d, clean_architecture.exchange e, clean_architecture.device_type dt " +
-                "WHERE d.exchange_id = e.id " +
-                "AND d.device_type_id = dt.id " +
-                "AND d.hostname = ?"
-                , hostname);
+        BroadbandAccessDevice device = null;
+        try {
+            Map<String, Object> result = jdbcTemplate.queryForMap(
+                    "SELECT e.code as ex_code, e.name as ex_name, e.postcode as ex_postcode, " +
+                            "       d.hostname, d.serial_number, dt.name as type, d.available_ports " +
+                            "FROM clean_architecture.bb_access_device d, clean_architecture.exchange e, clean_architecture.device_type dt " +
+                            "WHERE d.exchange_id = e.id " +
+                            "AND d.device_type_id = dt.id " +
+                            "AND d.hostname = ?"
+                    , hostname);
 
-        String exchangeCode = (String) result.get("ex_code");
-        String exchangeName = (String) result.get("ex_name");
-        String exchangePostcode = (String) result.get("ex_postcode");
-        Exchange exchange = new Exchange(exchangeCode, exchangeName, exchangePostcode);
+            if ( result.size() == 0) {
+                throw new IncorrectResultSizeDataAccessException(7, result.size());
+            }
 
-        String resultHostname = (String) result.get("hostname");
-        String resultSerialNumber = (String) result.get("serial_number");
-        DeviceType deviceType = DeviceType.valueOf((String) result.get("type"));
-        int availablePorts = ((BigDecimal) result.get("available_ports")).intValue();
-        BroadbandAccessDevice device = new BroadbandAccessDevice(resultHostname, resultSerialNumber, deviceType);
-        device.setAvailablePorts(availablePorts);
-        device.setExchange(exchange);
+            String exchangeCode = (String) result.get("ex_code");
+            String exchangeName = (String) result.get("ex_name");
+            String exchangePostcode = (String) result.get("ex_postcode");
+            Exchange exchange = new Exchange(exchangeCode, exchangeName, exchangePostcode);
+
+            String resultHostname = (String) result.get("hostname");
+            String resultSerialNumber = (String) result.get("serial_number");
+            DeviceType deviceType = DeviceType.valueOf((String) result.get("type"));
+            int availablePorts = ((BigDecimal) result.get("available_ports")).intValue();
+            device = new BroadbandAccessDevice(resultHostname, resultSerialNumber, deviceType);
+            device.setAvailablePorts(availablePorts);
+            device.setExchange(exchange);
+        } catch (IncorrectResultSizeDataAccessException ex) {
+            // do nothing
+        }
 
         return device;
     }
