@@ -2,11 +2,11 @@ package com.clean.example.core.usecase.broadbandaccessdevice.reconcile;
 
 import com.clean.example.core.usecase.job.OnFailure;
 import com.clean.example.core.usecase.job.OnSuccess;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class ReconcileBroadbandAccessDevicesUseCaseTest {
@@ -22,7 +22,7 @@ public class ReconcileBroadbandAccessDevicesUseCaseTest {
     ReconcileBroadbandAccessDevicesUseCase reconcileBroadbandAccessDevicesUseCase = new ReconcileBroadbandAccessDevicesUseCase(getAllDevicesHostname, getSerialNumberFromModel, getSerialNumberFromReality, updateSerialNumberInModel);
 
     @Test
-    public void nothingToUpdateWhenModeAndRealityAreTheSame() throws Exception {
+    public void nothingToUpdateWhenModeAndRealityAreTheSame() {
         givenThereIsADeviceWithHostname("hostname1");
         givenDeviceHasSerialNumberInModel("hostname1", "serialNumber1");
         givenDeviceHasSerialNumberInReality("hostname1", "serialNumber1");
@@ -33,32 +33,32 @@ public class ReconcileBroadbandAccessDevicesUseCaseTest {
     }
 
     @Test
-    public void updatesSerialNumberWhenRealityIsDifferentFromModel() throws Exception {
-        givenThereIsADeviceWithHostname("hostname1");
-        givenDeviceHasSerialNumberInModel("hostname1", "serialNumber1");
-        givenDeviceHasSerialNumberInReality("hostname1", "newSerialNumber");
+    public void updatesSerialNumberWhenRealityIsDifferentFromModel() {
+        givenThereIsADeviceWithHostname("hostname2");
+        givenDeviceHasSerialNumberInModel("hostname2", "serialNumber2");
+        givenDeviceHasSerialNumberInReality("hostname2", "newSerialNumber");
 
         reconcileBroadbandAccessDevicesUseCase.reconcile(onSuccess, onFailure);
 
-        thenTheDeviceHasBeenUpdated("hostname1", "newSerialNumber");
+        thenTheDeviceHasBeenUpdated("hostname2", "newSerialNumber");
     }
 
     @Test
-    public void updatesSerialNumberWhenDeviceDoesNotHaveOneInModel() throws Exception {
-        givenThereIsADeviceWithHostname("hostname1");
-        givenDeviceHasNoSerialNumberInModel("hostname1");
-        givenDeviceHasSerialNumberInReality("hostname1", "newSerialNumber");
+    public void updatesSerialNumberWhenDeviceDoesNotHaveOneInModel() {
+        givenThereIsADeviceWithHostname("hostname3");
+        givenDeviceHasNoSerialNumberInModel("hostname3");
+        givenDeviceHasSerialNumberInReality("hostname3", "newOtherSerialNumber");
 
         reconcileBroadbandAccessDevicesUseCase.reconcile(onSuccess, onFailure);
 
-        thenTheDeviceHasBeenUpdated("hostname1", "newSerialNumber");
+        thenTheDeviceHasBeenUpdated("hostname3", "newOtherSerialNumber");
     }
 
     @Test
-    public void auditsASuccessWhenUpdatesTheModel() throws Exception {
-        givenThereIsADeviceWithHostname("hostname1");
-        givenDeviceHasSerialNumberInModel("hostname1", "serialNumber1");
-        givenDeviceHasSerialNumberInReality("hostname1", "newSerialNumber");
+    public void auditsASuccessWhenUpdatesTheModel() {
+        givenThereIsADeviceWithHostname("hostname4");
+        givenDeviceHasSerialNumberInModel("hostname4", "serialNumber4");
+        givenDeviceHasSerialNumberInReality("hostname4", "newSerialNumber");
 
         reconcileBroadbandAccessDevicesUseCase.reconcile(onSuccess, onFailure);
 
@@ -66,10 +66,10 @@ public class ReconcileBroadbandAccessDevicesUseCaseTest {
     }
 
     @Test
-    public void auditsFailureWhenSerialNumberFromRealityIsLongerThanUsual() throws Exception {
-        givenThereIsADeviceWithHostname("hostname1");
-        givenDeviceHasSerialNumberInModel("hostname1", "serialNumber1");
-        givenDeviceHasSerialNumberInReality("hostname1", "longerThanAllowedSerialNumber");
+    public void auditsFailureWhenSerialNumberFromRealityIsLongerThanUsual() {
+        givenThereIsADeviceWithHostname("hostname5");
+        givenDeviceHasSerialNumberInModel("hostname5", "serialNumber5");
+        givenDeviceHasSerialNumberInReality("hostname5", "longerThanAllowedSerialNumber");
 
         reconcileBroadbandAccessDevicesUseCase.reconcile(onSuccess, onFailure);
 
@@ -78,10 +78,10 @@ public class ReconcileBroadbandAccessDevicesUseCaseTest {
     }
 
     @Test
-    public void auditsFailureWhenItCantRetrieveSerialNumberFromReality() throws Exception {
-        givenThereIsADeviceWithHostname("hostname1");
-        givenDeviceHasSerialNumberInModel("hostname1", "serialNumber1");
-        givenThereIsAProblemRetrievingTheSerialNumberFromReality("hostname1");
+    public void auditsFailureWhenItCantRetrieveSerialNumberFromReality() {
+        givenThereIsADeviceWithHostname("hostname6");
+        givenDeviceHasSerialNumberInModel("hostname6", "serialNumber6");
+        givenThereIsAProblemRetrievingTheSerialNumberFromReality("hostname6");
 
         reconcileBroadbandAccessDevicesUseCase.reconcile(onSuccess, onFailure);
 

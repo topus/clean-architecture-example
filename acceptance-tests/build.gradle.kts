@@ -1,5 +1,9 @@
 description = "Acceptance Tests for the BDD cycle (objective: have conversaions and demonstrate requirements)"
 
+plugins {
+    id("clean-architecture.java-application-conventions")
+}
+
 test {
 
     // make gradle print the test result for each test in the build (we like to see the acceptance tests running)
@@ -34,10 +38,10 @@ task copyTestResources(type: Copy) {
 processTestResources.dependsOn copyTestResources
 
 dependencies {
-    compile project(":application:configuration")
-    compile libs.unit_tests
-    compile libs.acceptance_tests
-    compile libs.end_to_end_test
+    implementation(project(":application:configuration"))
+    implementation(libs.unit_tests)
+    implementation(libs.acceptance_tests)
+    implementation(libs.end_to_end_test)
 
-    testCompile libs.string_utils
+    testImplementation(libs.string_utils)
 }

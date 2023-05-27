@@ -1,12 +1,12 @@
 package com.clean.example.core.usecase.broadbandaccessdevice.getdetails;
 
 import com.clean.example.core.entity.BroadbandAccessDevice;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.clean.example.core.entity.DeviceType.ADSL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static org.mockito.Matchers.anyString;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -17,7 +17,7 @@ public class GetBroadbandAccessDeviceDetailsUseCaseTest {
     GetBroadbandAccessDeviceDetailsUseCase getBroadbandAccessDeviceDetailsUseCase = new GetBroadbandAccessDeviceDetailsUseCase(getDeviceDetails);
 
     @Test
-    public void returnsDeviceDetails() throws Exception {
+    public void returnsDeviceDetails() {
         BroadbandAccessDevice expectedDevice = givenADeviceIsFound();
 
         BroadbandAccessDevice actualDevice = getBroadbandAccessDeviceDetailsUseCase.getDeviceDetails("hostname1");
@@ -26,10 +26,11 @@ public class GetBroadbandAccessDeviceDetailsUseCaseTest {
     }
 
     @Test
-    public void errorWhenDeviceIsNotFound() throws Exception {
+    public void errorWhenDeviceIsNotFound() {
         givenADeviceIsNotFound();
 
-        assertThatExceptionOfType(DeviceNotFoundException.class).isThrownBy(() -> getBroadbandAccessDeviceDetailsUseCase.getDeviceDetails("hostname1"));
+        assertThatThrownBy( () -> getBroadbandAccessDeviceDetailsUseCase.getDeviceDetails("hostnameX") )
+                .isInstanceOf(DeviceNotFoundException.class);
     }
 
     private BroadbandAccessDevice givenADeviceIsFound() {

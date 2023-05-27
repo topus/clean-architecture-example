@@ -3,8 +3,8 @@ package com.clean.example.core.usecase.exchange.getcapacity;
 import com.clean.example.core.entity.BroadbandAccessDevice;
 import com.clean.example.core.entity.Capacity;
 import com.clean.example.core.entity.DeviceType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static com.clean.example.core.entity.DeviceType.ADSL;
 import static com.clean.example.core.entity.DeviceType.FIBRE;
@@ -24,13 +24,13 @@ public class GetCapacityForExchangeUseCaseTest {
 
     GetCapacityForExchangeUseCase getCapacityForExchangeUseCase = new GetCapacityForExchangeUseCase(doesExchangeExist, getAvailablePortsOfAllDevicesInExchange);
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         givenExchangeExists();
     }
 
     @Test
-    public void noCapacityIfDevicesHaveNoPorts() throws Exception {
+    public void noCapacityIfDevicesHaveNoPorts() {
         givenDevices(device(FIBRE, NO_PORTS), device(ADSL, NO_PORTS));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -40,7 +40,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void hasCapacityIfAdslDeviceHasPorts() throws Exception {
+    public void hasCapacityIfAdslDeviceHasPorts() {
         givenDevices(device(ADSL, 10));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -49,7 +49,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void hasOnlyAdslCapacityIfAdslDeviceHasPorts() throws Exception {
+    public void hasOnlyAdslCapacityIfAdslDeviceHasPorts() {
         givenDevices(device(ADSL, 10));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -58,7 +58,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void hasCapacityIfFibreDeviceHasPorts() throws Exception {
+    public void hasCapacityIfFibreDeviceHasPorts() {
         givenDevices(device(FIBRE, 10));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -67,7 +67,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void hasOnlyFibreCapacityIfAdslDeviceHasPorts() throws Exception {
+    public void hasOnlyFibreCapacityIfAdslDeviceHasPorts() {
         givenDevices(device(FIBRE, 10));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -76,7 +76,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void capacityJoinsAvailablePortsForAdslDevices() throws Exception {
+    public void capacityJoinsAvailablePortsForAdslDevices() {
         givenDevices(device(ADSL, 10), device(ADSL, NO_PORTS));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -85,7 +85,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void capacityJoinsAvailablePortsForFibreDevices() throws Exception {
+    public void capacityJoinsAvailablePortsForFibreDevices() {
         givenDevices(device(FIBRE, 10), device(FIBRE, NO_PORTS));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -94,7 +94,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void adslHasNoCapacityIfAvailablePortIsLessThan5() throws Exception {
+    public void adslHasNoCapacityIfAvailablePortIsLessThan5() {
         givenDevices(device(ADSL, 1), device(ADSL, 3));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -103,7 +103,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void fibreHasNoCapacityIfAvailablePortIsLessThan5() throws Exception {
+    public void fibreHasNoCapacityIfAvailablePortIsLessThan5() {
         givenDevices(device(FIBRE, 1), device(FIBRE, 3));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -112,7 +112,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void adslHasCapacityIfAvailablePortIsEqualTo5() throws Exception {
+    public void adslHasCapacityIfAvailablePortIsEqualTo5() {
         givenDevices(device(ADSL, 2), device(ADSL, 3));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -121,7 +121,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void fibreHasCapacityIfAvailablePortIsEqualTo5() throws Exception {
+    public void fibreHasCapacityIfAvailablePortIsEqualTo5() {
         givenDevices(device(FIBRE, 2), device(FIBRE, 3));
 
         Capacity capacity = getCapacityForExchangeUseCase.getCapacity(EXCHANGE_CODE);
@@ -130,7 +130,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     @Test
-    public void errorWhenExchangeDoesNotExist() throws Exception {
+    public void errorWhenExchangeDoesNotExist() {
         givenExchangeDoesNotExist();
 
         assertThatExceptionOfType(ExchangeNotFoundException.class).isThrownBy(() ->
@@ -152,7 +152,7 @@ public class GetCapacityForExchangeUseCaseTest {
     }
 
     private BroadbandAccessDevice device(DeviceType deviceType, int availablePorts) {
-        BroadbandAccessDevice broadbandAccessDevice = new BroadbandAccessDevice("hostanme", "serial", deviceType);
+        BroadbandAccessDevice broadbandAccessDevice = new BroadbandAccessDevice("hostname", "serial", deviceType);
         broadbandAccessDevice.setAvailablePorts(availablePorts);
         return broadbandAccessDevice;
     }

@@ -1,26 +1,23 @@
 description = "Clean Architecture Example"
 
+group = "be.topus"
+version = "1.0-SNAPSHOT"
+
 subprojects {
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven {
-            url "http://repo.bodar.com"
-        }
-    }
+    val springVersion by extra("4.2.5.RELEASE")
+    val springbootVersion by extra("1.3.3.RELEASE")
 
+    /*
     ext {
         spring_version = "4.2.5.RELEASE"
         springboot_version = "1.3.3.RELEASE"
     }
+    */
 
+/*
     ext.libs = [
-            unit_tests             : [
-                    "junit:junit:4.+",
-                    "org.mockito:mockito-core:1.10.19",
-                    "org.assertj:assertj-core:3.3.0"
-            ],
+
 
             acceptance_tests       : [
                     "com.googlecode.yatspec:yatspec:1.20"
@@ -58,22 +55,15 @@ subprojects {
                     "org.springframework:spring-jdbc:${spring_version}"
             ],
 
-            string_utils           : [
-                    "org.apache.commons:commons-lang3:3.4"
-            ],
-
             log                    : [
                     "org.slf4j:slf4j-api:1.7.19"
             ]
     ]
+ */
 }
 
 // apply java plugin to all modules
-configure(allprojects - project(":application")) {
-    apply plugin: "java"
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = "2.11"
-}
+// configure(allprojects - project(":application")) {
+//    apply plugin: "java"
+//    sourceCompatibility = JavaVersion.VERSION_1_8
+//}
