@@ -4,7 +4,7 @@ import com.clean.example.core.entity.Capacity;
 import com.clean.example.core.usecase.exchange.getcapacity.ExchangeNotFoundException;
 import com.clean.example.core.usecase.exchange.getcapacity.GetCapacityForExchangeUseCase;
 import com.clean.example.entrypoints.rest.exception.NotFoundException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -13,14 +13,14 @@ import static org.mockito.Mockito.when;
 
 public class GetCapacityForExchangeEndpointTest {
 
-    private static final String EXCHANGE_CODE = "exch1";
+    private static final String EXCHANGE_CODE = "exchange1";
 
     GetCapacityForExchangeUseCase getCapacityForExchangeUseCase = mock(GetCapacityForExchangeUseCase.class);
 
     GetCapacityForExchangeEndpoint getCapacityForExchangeEndpoint = new GetCapacityForExchangeEndpoint(getCapacityForExchangeUseCase);
 
     @Test
-    public void returnsTheCapacityForAnExchange() throws Exception {
+    public void returnsTheCapacityForAnExchange() {
         givenThereIsCapacityForAnExchange();
 
         CapacityDto capacity = getCapacityForExchangeEndpoint.getCapacity(EXCHANGE_CODE);
@@ -30,7 +30,7 @@ public class GetCapacityForExchangeEndpointTest {
     }
 
     @Test
-    public void errorWhenDeviceIsNotFound() throws Exception {
+    public void errorWhenDeviceIsNotFound() {
         givenAnExchangeThatDoesNotExist();
 
         assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> getCapacityForExchangeEndpoint.getCapacity(EXCHANGE_CODE));

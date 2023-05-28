@@ -6,7 +6,7 @@ import com.clean.example.core.entity.Exchange;
 import com.clean.example.core.usecase.broadbandaccessdevice.getdetails.DeviceNotFoundException;
 import com.clean.example.core.usecase.broadbandaccessdevice.getdetails.GetBroadbandAccessDeviceDetailsUseCase;
 import com.clean.example.entrypoints.rest.exception.NotFoundException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -27,7 +27,7 @@ public class GetBroadbandAccessDeviceEndpointTest {
     GetBroadbandAccessDeviceEndpoint getBroadbandAccessDeviceEndpoint = new GetBroadbandAccessDeviceEndpoint(getBroadbandAccessDeviceDetailsUseCase);
 
     @Test
-    public void returnsTheDetailsOfTheDevice() throws Exception {
+    public void returnsTheDetailsOfTheDevice() {
         givenADeviceExists();
 
         BroadbandAccessDeviceDto deviceDto = getBroadbandAccessDeviceEndpoint.getDetails(HOSTNAME);
@@ -39,7 +39,7 @@ public class GetBroadbandAccessDeviceEndpointTest {
     }
 
     @Test
-    public void errorWhenDeviceIsNotFound() throws Exception {
+    public void errorWhenDeviceIsNotFound() {
         givenADeviceDoesNotExist();
 
         assertThatExceptionOfType(NotFoundException.class).isThrownBy(() -> getBroadbandAccessDeviceEndpoint.getDetails(HOSTNAME));

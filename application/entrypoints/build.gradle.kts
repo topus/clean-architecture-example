@@ -1,4 +1,4 @@
-description = "Retrieve data from whatever source (db, 3rd party, etc.)"
+description = "Ways to interact with the application (e.g. Rest APIs, Jobs, GUIs, etc.)"
 
 plugins {
     id("clean-architecture.java-library-conventions")
@@ -6,7 +6,8 @@ plugins {
 
 dependencies {
     implementation(project(":application:core"))
-    implementation(libs.bundles.database)
+    implementation(libs.bundles.rest)
+    implementation(libs.bundles.log)
 
     testImplementation(libs.bundles.unitTests)
 }

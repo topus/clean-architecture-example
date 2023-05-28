@@ -39,22 +39,16 @@ subprojects {
                     "org.springframework.boot:spring-boot-starter-logging:${springboot_version}",
             ],
 
-            rest                   : [
-                    "org.springframework:spring-web:${spring_version}"
-            ],
+
 
             database_initialisation: [
                     "org.springframework:spring-jdbc:${spring_version}",
                     "com.h2database:h2:1.4.191"
             ],
 
-            database               : [
-                    "org.springframework:spring-jdbc:${spring_version}"
-            ],
 
-            log                    : [
-                    "org.slf4j:slf4j-api:1.7.19"
-            ]
+
+
     ]
  */
 }

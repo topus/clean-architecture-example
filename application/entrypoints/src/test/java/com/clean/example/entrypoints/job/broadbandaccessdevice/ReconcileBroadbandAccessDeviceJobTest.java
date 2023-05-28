@@ -5,11 +5,11 @@ import com.clean.example.core.usecase.job.OnFailure;
 import com.clean.example.core.usecase.job.OnSuccess;
 import com.clean.example.entrypoints.job.scheduledjob.JobResults;
 import com.clean.example.entrypoints.job.scheduledjob.JobResultsCount;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class ReconcileBroadbandAccessDeviceJobTest {
@@ -21,15 +21,15 @@ public class ReconcileBroadbandAccessDeviceJobTest {
     ReconcileBroadbandAccessDeviceJob reconcileBroadbandAccessDeviceJob = new ReconcileBroadbandAccessDeviceJob(reconcileBroadbandAccessDevicesUseCase, jobResults);
 
     @Test
-    public void jobHasAllDetails() throws Exception {
+    public void jobHasAllDetails() {
         assertThat(reconcileBroadbandAccessDeviceJob.getName()).isNotEmpty();
-        assertThat(reconcileBroadbandAccessDeviceJob.getInitialDelay()).isNotNull();
-        assertThat(reconcileBroadbandAccessDeviceJob.getPeriod()).isNotNull();
+        assertThat(reconcileBroadbandAccessDeviceJob.getInitialDelay()).isZero();
+        assertThat(reconcileBroadbandAccessDeviceJob.getPeriod()).isNotZero();
         assertThat(reconcileBroadbandAccessDeviceJob.getTimeUnit()).isNotNull();
     }
 
     @Test
-    public void startsUseCaseToReconcileDevices() throws Exception {
+    public void startsUseCaseToReconcileDevices() {
         givenAJobResultsCount();
 
         reconcileBroadbandAccessDeviceJob.run();
@@ -38,7 +38,7 @@ public class ReconcileBroadbandAccessDeviceJobTest {
     }
 
     @Test
-    public void increasesSuccessesAndFailuresOnSuccessAndOnFailure() throws Exception {
+    public void increasesSuccessesAndFailuresOnSuccessAndOnFailure() {
         givenAJobResultsCount();
 
         reconcileBroadbandAccessDeviceJob.run();
@@ -49,7 +49,7 @@ public class ReconcileBroadbandAccessDeviceJobTest {
     }
 
     @Test
-    public void recordsSuccessesAndFailuresAtTheEnd() throws Exception {
+    public void recordsSuccessesAndFailuresAtTheEnd() {
         givenAJobResultsCount();
 
         reconcileBroadbandAccessDeviceJob.run();

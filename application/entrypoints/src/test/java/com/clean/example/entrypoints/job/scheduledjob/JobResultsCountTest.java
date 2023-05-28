@@ -1,13 +1,13 @@
 package com.clean.example.entrypoints.job.scheduledjob;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JobResultsCountTest {
 
     @Test
-    public void recordsSuccesses() throws Exception {
+    public void recordsSuccesses() {
         JobResultsCount jobResultsCount = new JobResultsCount();
 
         jobResultsCount.success();
@@ -17,7 +17,7 @@ public class JobResultsCountTest {
     }
 
     @Test
-    public void recordsFailures() throws Exception {
+    public void recordsFailures() {
         JobResultsCount jobResultsCount = new JobResultsCount();
 
         jobResultsCount.failure();
